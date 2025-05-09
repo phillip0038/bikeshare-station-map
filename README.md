@@ -42,5 +42,3 @@ This project analyzes Austin's top bikeshare stations using public data from Goo
 ## 🔗 Dataset Source
 
 - [BigQuery Public Datasets – Austin Bikeshare](https://console.cloud.google.com/marketplace/product/bigquery-public-data/austin_bikeshare)
-
--
