@@ -1,0 +1,66 @@
+---
+title: "Bikeshare Station Map"
+author: "Phillip Beagley"
+date: "2025-05-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(readr)
+library(ggplot2)
+library(leaflet)
+```
+
+```{r load csv data}
+# Load the exported CSV
+bikeshare <- read_csv("top_bikeshare_stations.csv", show_col_types = FALSE)
+
+# Quick preview
+head(bikeshare)
+```
+
+```{r top ten stations plot}
+ggplot(bikeshare, aes(x = reorder(start_station_name, total_trips), y = total_trips)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Top 10 Bikeshare Stations by Total Trips",
+    x = "Station Name",
+    y = "Total Trips"
+  ) +
+  theme_minimal()
+```
+
+```{r locations plot}
+ggplot(bikeshare, aes(x = longitude, y = latitude)) +
+  geom_point(aes(size = total_trips), color = "darkred", alpha = 0.7) +
+  labs(
+    title = "Station Locations (Sized by Total Trips)",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  theme_minimal()
+```
+
+```{r interactive leaflet map}
+leaflet(bikeshare) %>%
+  addTiles() %>%
+  addCircles(
+    lng = ~longitude,
+    lat = ~latitude,
+    radius = ~sqrt(total_trips) * 2,
+    popup = ~paste0(start_station_name, ": ", total_trips, " trips"),
+    color = "navy",
+    fillOpacity = 0.7
+  )
+```
+
+## 🔍 Key Takeaways
+
+- **Station 1** has the highest number of trips and is likely a central commuter hub.
+- **Station 2** is also high-traffic and might benefit from additional docks.
+- **Several stations** have very low usage and may need to be reevaluated.
+
+
